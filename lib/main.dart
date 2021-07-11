@@ -18,7 +18,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: white,
         ),
-        home: RegisterPage());
+        home: RegisterPage(
+          onJumpToLogin: () {},
+        ));
   }
 }
 

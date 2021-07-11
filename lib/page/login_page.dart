@@ -5,34 +5,23 @@ import 'package:bilibili_app/widget/login_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'login_page.dart';
-
-class RegisterPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   final VoidCallback onJumpToLogin;
-  RegisterPage({Key? key, required this.onJumpToLogin}) : super(key: key);
+  LoginPage({Key? key, required this.onJumpToLogin}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   bool protect = false;
   bool loginEnable = false;
   String userName = '';
-  String passWord = '';
-  String rePassWord = '';
-  final String imoocId = "4095046";
-  final String orderId = "3327";
+  String password = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('注册', '登录', () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return LoginPage(
-            onJumpToLogin: () {},
-          );
-        }));
-      }),
+      appBar: appBar('登录', '注册', rightButtonClick),
       body: Container(
         child: ListView(
           children: [
@@ -52,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
               lineStretch: true,
               obscureText: true,
               onChanged: (text) {
-                passWord = text;
+                password = text;
               },
               focusChanged: (focus) {
                 this.setState(() {
@@ -60,31 +49,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 });
               },
             ),
-            LoginInput(
-              title: '确认密码',
-              hint: "请确认密码",
-              lineStretch: true,
-              obscureText: true,
-              onChanged: (text) {
-                rePassWord = text;
-              },
-              focusChanged: (focus) {},
-            ),
-            // LoginInput(
-            //   title: '账号ID',
-            //   hint: "请输入账户ID",
-            //   keyBoardType: TextInputType.number,
-            //   lineStretch: true,
-            //   obscureText: true,
-            //   onChanged: (text) {
-            //     print(text);
-            //   },
-            //   focusChanged: (focus) {
-            //     this.setState(() {
-            //       protect = focus;
-            //     });
-            //   },
-            // ),
             Padding(
               padding: EdgeInsets.only(top: 20, left: 20, right: 200),
               child: _loginButton(),
@@ -101,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void checkInput() {
     bool enable = false;
-    if (userName.isNotEmpty && passWord.isNotEmpty && rePassWord.isNotEmpty) {
+    if (userName.isNotEmpty && password.isNotEmpty) {
       enable = true;
     } else {
       enable = false;
@@ -117,19 +81,15 @@ class _RegisterPageState extends State<RegisterPage> {
         // 注册事件
         print('tap:${userName.isNotEmpty}');
         _send();
-        if (loginEnable == true) {
-        } else {
-          print('false');
-        }
       },
       child: Text(
-        '注册',
+        '登录',
       ),
     );
   }
 
   void _send() async {
-    var result = await LoginDao.register(userName, passWord, imoocId, orderId);
+    var result = await LoginDao.login(userName, password);
     print(result);
   }
 }

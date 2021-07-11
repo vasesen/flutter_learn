@@ -20,6 +20,7 @@ class LoginInput extends StatefulWidget {
     this.lineStretch = false,
     this.obscureText = false,
     this.keboardType,
+    TextInputType? keyBoardType,
   }) : super(key: key);
 
   @override

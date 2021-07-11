@@ -3,6 +3,7 @@ import 'package:bilibili_app/http/core/net.dart';
 import 'package:bilibili_app/http/request/base_request.dart';
 import 'package:bilibili_app/http/request/login_request.dart';
 import 'package:bilibili_app/http/request/register_request.dart';
+import 'dart:convert';
 
 class LoginDao {
   static const BOARDING_PASS = "boarding-pass";
@@ -19,22 +20,27 @@ class LoginDao {
     BaseRequest request;
     if (imoocId != null && orderId != null) {
       request = RegisterRequest();
+      request
+          .add("userName", userName)
+          .add("password", password)
+          .add("imoocId", imoocId) //4095046
+          .add("orderId", orderId); //3327
     } else {
       request = LoginRequest();
+      request.add("userName", userName).add("password", password);
     }
-    request
-        .add("userName", userName)
-        .add("password", password)
-        .add("imoocId", imoocId) //4095046
-        .add("orderId", orderId); //3327
-
+    print(request.header);
     var result = await Net.getInstance().fire(request);
-    print(result);
-    if (result['code'] == 0 && result['data']) {
-      //保存登录令牌
-      Cache.getInstance().setString("BOARDING_PASS", result['data']);
-    }
-    return result;
+    print('params:${request.params}');
+    print('2:$result');
+    print('result:${result.runtimeType.toString()}');
+    var data = jsonDecode(result);
+    print(data);
+    // if (data['code'] == 0 && data['data']) {
+    //   //保存登录令牌
+    //   Cache.getInstance().setString("BOARDING_PASS", data['data']);
+    // }
+    return data;
   }
 
   static getBoardingPass() {

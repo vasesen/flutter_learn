@@ -4,13 +4,8 @@ import 'package:bilibili_app/http/request/base_request.dart';
 import 'package:dio/dio.dart';
 
 class DioAdapter extends NetAdapter {
-  Map<String, dynamic> header = {
-    'course-flag': 'fa',
-  };
-
   @override
   Future<NetResponse<T>> send<T>(BaseRequest request) async {
-    request.header = header;
     var response, options = Options(headers: request.header);
     var error;
     try {
@@ -22,6 +17,9 @@ class DioAdapter extends NetAdapter {
       } else if (request.httpMethod() == HttpMethod.DELETE) {
         response = await Dio()
             .delete(request.url(), data: request.params, options: options);
+      } else if (request.httpMethod() == HttpMethod.PUT) {
+        response = await Dio()
+            .put(request.url(), data: request.params, options: options);
       }
     } on DioError catch (e) {
       error = e;
