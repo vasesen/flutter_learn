@@ -70,21 +70,6 @@ class _RegisterPageState extends State<RegisterPage> {
               },
               focusChanged: (focus) {},
             ),
-            // LoginInput(
-            //   title: '账号ID',
-            //   hint: "请输入账户ID",
-            //   keyBoardType: TextInputType.number,
-            //   lineStretch: true,
-            //   obscureText: true,
-            //   onChanged: (text) {
-            //     print(text);
-            //   },
-            //   focusChanged: (focus) {
-            //     this.setState(() {
-            //       protect = focus;
-            //     });
-            //   },
-            // ),
             Padding(
               padding: EdgeInsets.only(top: 20, left: 20, right: 200),
               child: _loginButton(),

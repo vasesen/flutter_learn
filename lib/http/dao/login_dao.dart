@@ -31,16 +31,12 @@ class LoginDao {
     }
     print(request.header);
     var result = await Net.getInstance().fire(request);
-    print('params:${request.params}');
-    print('2:$result');
-    print('result:${result.runtimeType.toString()}');
-    var data = jsonDecode(result);
-    print(data);
-    // if (data['code'] == 0 && data['data']) {
-    //   //保存登录令牌
-    //   Cache.getInstance().setString("BOARDING_PASS", data['data']);
-    // }
-    return data;
+    var data = jsonDecode(result.toString());
+    if (data['code'] == 0 && data['data'].isNotEmpty) {
+      //保存登录令牌
+      Cache.getInstance().setString("BOARDING_PASS", data['data']);
+    }
+    return result;
   }
 
   static getBoardingPass() {

@@ -14,7 +14,7 @@ class NetResponse<T> {
       this.statusMessage,
       this.extra});
 
-  dynamic data;
+  Map<String, dynamic>? data;
   BaseRequest? request;
   int? statusCode;
   String? statusMessage;

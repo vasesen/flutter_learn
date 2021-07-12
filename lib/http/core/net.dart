@@ -66,7 +66,7 @@ class Net {
     }
   }
 
-  Future<dynamic> send<T>(BaseRequest request) async {
+  Future<NetResponse<T>> send<T>(BaseRequest request) async {
     //print('url:${request.url()}');
     // print('method:${request.httpMethod()}');
     // request.addHeader("token", "12345");
