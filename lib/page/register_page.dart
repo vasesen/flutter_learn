@@ -1,3 +1,4 @@
+import 'package:bilibili_app/http/core/net_error.dart';
 import 'package:bilibili_app/http/dao/login_dao.dart';
 import 'package:bilibili_app/widget/appbar.dart';
 import 'package:bilibili_app/widget/login_effect.dart';
@@ -100,12 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return InkWell(
       onTap: () {
         // 注册事件
-        print('tap:${userName.isNotEmpty}');
-        _send();
-        if (loginEnable == true) {
-        } else {
-          print('false');
-        }
+        loginEnable == true ? _send() : print('输入不全');
       },
       child: Text(
         '注册',
@@ -114,7 +110,12 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _send() async {
-    var result = await LoginDao.register(userName, passWord, imoocId, orderId);
-    print(result);
+    try {
+      var result =
+          await LoginDao.register(userName, passWord, imoocId, orderId);
+      print(result);
+    } on NetError catch (e) {
+      print(e);
+    }
   }
 }

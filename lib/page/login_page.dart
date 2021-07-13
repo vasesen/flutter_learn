@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:bilibili_app/http/core/net_error.dart';
 import 'package:bilibili_app/http/dao/login_dao.dart';
+import 'package:bilibili_app/util/toast.dart';
 import 'package:bilibili_app/widget/appbar.dart';
+import 'package:bilibili_app/widget/login_button.dart';
 import 'package:bilibili_app/widget/login_effect.dart';
 import 'package:bilibili_app/widget/login_input.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               title: '用户名',
               hint: "请输入用户名",
               lineStretch: true,
-              obscureText: true,
+              obscureText: false,
               onChanged: (text) {
                 userName = text;
               },
@@ -50,8 +55,9 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20, left: 20, right: 200),
-              child: _loginButton(),
+              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: LoginButton(
+                  title: '登录', enable: loginEnable, onPressed: send),
             )
           ],
         ),
@@ -75,21 +81,19 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  _loginButton() {
-    return InkWell(
-      onTap: () {
-        // 注册事件
-        print('tap:${userName.isNotEmpty}');
-        _send();
-      },
-      child: Text(
-        '登录',
-      ),
-    );
-  }
-
-  void _send() async {
-    var result = await LoginDao.login(userName, password);
-    print(result);
+  void send() async {
+    try {
+      var result = await LoginDao.login(userName, password);
+      print(result);
+      if (jsonDecode(result.toString())['code'] == 0) {
+        showToast('登录成功');
+      } else {
+        showWarnToast(jsonDecode(result.toString())['msg']);
+      }
+    } on NeedAuth catch (e) {
+      print(e);
+    } on NetError catch (e) {
+      print(e);
+    }
   }
 }
