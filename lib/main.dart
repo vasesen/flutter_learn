@@ -1,80 +1,76 @@
-import 'package:bilibili_app/http/core/net.dart';
-import 'package:bilibili_app/http/core/net_error.dart';
-import 'package:bilibili_app/http/request/test_request.dart';
-import 'package:bilibili_app/page/register_page.dart';
-import 'package:bilibili_app/util/color.dart';
+import 'package:bilibili_app/model/video_model.dart';
+import 'package:bilibili_app/page/detail.dart';
+import 'package:bilibili_app/page/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
   @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  MyRouteDelegate _routeDelegate = MyRouteDelegate();
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: white,
-        ),
-        home: RegisterPage(
-          onJumpToLogin: () {},
-        ));
+    var widget = Router(routerDelegate: _routeDelegate);
+    return MaterialApp(home: widget);
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+class MyRouteDelegate extends RouterDelegate<MyRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<MyRoutePath> {
+  final GlobalKey<NavigatorState> navigatorKey;
+  MyRoutePath? path;
+  List<MaterialPage> pages = [
+    pageWrap(DetailPage(
+      videoModel: null,
+    )),
+    pageWrap(
+      HomePage(
+        onJumpToDetail: (VideoModel value) {
+          print('1:$value');
+        },
+      ),
+    ),
+  ];
+
+  // 为navigator设置一个key 必要时可以通过 navigatorKey.currentState来获取到NavigatorState对象
+  MyRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+
+  // @override
+  // GlobalKey<NavigatorState> get(navigatorKey) => throw UnimplementedError();
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  Future<void> setNewRoutePath(MyRoutePath path) {
+    throw UnimplementedError();
+  }
+
+  Widget build(BuildContext context) {
+    //navigatorKey.currentState
+    return Navigator(
+        key: navigatorKey,
+        pages: pages,
+        onPopPage: (route, result) {
+          if (!route.didPop(result)) {
+            return false;
+          }
+          return true;
+        });
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class MyRoutePath {
+  final String? location;
+  MyRoutePath.home() : location = "/";
+  MyRoutePath.detail() : location = '/detail';
+}
 
-  void _incrementCounter() async {
-    TestRequest request = TestRequest();
-    request.add("requestPrams", "vasesen");
-    try {
-      var result = await Net.getInstance().fire(request);
-      print(result);
-    } on NeedAuth catch (e) {
-      print(e);
-    } on NeedLogin catch (e) {
-      print(e);
-    } on NetError catch (e) {
-      print(e);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+// 创建页面
+pageWrap(Widget child) {
+  return MaterialPage(key: ValueKey(child.hashCode), child: child);
 }
