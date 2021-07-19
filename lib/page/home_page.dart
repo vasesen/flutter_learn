@@ -8,10 +8,6 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-void onJumpToDetail() {
-  VideoModel(15);
-}
-
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
@@ -27,7 +23,7 @@ class _HomePageState extends State<HomePage> {
               minWidth: 250,
               color: Colors.blue,
               child: (Text('button')),
-              onPressed: onJumpToDetail)
+              onPressed: () => widget.onJumpToDetail(VideoModel(18)))
         ],
       )),
     );

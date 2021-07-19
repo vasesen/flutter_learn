@@ -19,7 +19,7 @@ class _DetailPageState extends State<DetailPage> {
         title: Text('详情页'),
       ),
       body: Container(
-        child: Text('详情页,vid:${widget.videoModel}'),
+        child: Text('详情页,vid:${widget.videoModel!.vid}'),
       ),
     );
   }
