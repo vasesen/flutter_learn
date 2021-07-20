@@ -11,8 +11,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback onJumpToLogin;
-  LoginPage({Key? key, required this.onJumpToLogin}) : super(key: key);
+  final VoidCallback onJumpToRigister;
+  final VoidCallback onLoginSuccess;
+  LoginPage(
+      {Key? key, required this.onJumpToRigister, required this.onLoginSuccess})
+      : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -26,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('登录', '注册', rightButtonClick),
+      appBar: appBar('登录', '注册', widget.onJumpToRigister),
       body: Container(
         child: ListView(
           children: [
@@ -87,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
       print(result);
       if (jsonDecode(result.toString())['code'] == 0) {
         showToast('登录成功');
+        widget.onLoginSuccess();
       } else {
         showWarnToast(jsonDecode(result.toString())['msg']);
       }

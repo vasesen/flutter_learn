@@ -6,8 +6,6 @@ import 'package:bilibili_app/widget/login_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'login_page.dart';
-
 class RegisterPage extends StatefulWidget {
   final VoidCallback onJumpToLogin;
   RegisterPage({Key? key, required this.onJumpToLogin}) : super(key: key);
@@ -29,7 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: appBar('注册', '登录', () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return LoginPage(
+          return RegisterPage(
             onJumpToLogin: () {},
           );
         }));
