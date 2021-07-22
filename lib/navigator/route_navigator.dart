@@ -45,3 +45,39 @@ class RouteStatusInfo {
 
   RouteStatusInfo(this.routeStatus, this.page);
 }
+
+// 监听路由页面跳转  监听当前页面是否压后台
+class RouteNavigator extends _RouteJumpListener {
+  static RouteNavigator? _instance;
+
+  RouteJumpListener? _routeJump;
+  RouteNavigator._();
+  static RouteNavigator getInstance() {
+    if (_instance == null) {
+      _instance = RouteNavigator._();
+    }
+    return _instance!;
+  }
+
+  // 注册路由跳转逻辑
+  void registerRouteJump(RouteJumpListener routeJumpListener) {
+    this._routeJump = routeJumpListener;
+  }
+
+  @override
+  void onJumpTo(RouteStatus routeStatus, {Map? args}) {
+    _routeJump!.onJumpTo(routeStatus, args: args);
+  }
+}
+
+abstract class _RouteJumpListener {
+  void onJumpTo(RouteStatus routeStatus, {Map args});
+}
+
+typedef OnJumpTo = void Function(RouteStatus routeStatus, {Map? args});
+
+//定义路由跳转逻辑要实现的功能
+class RouteJumpListener {
+  final OnJumpTo onJumpTo;
+  RouteJumpListener({required this.onJumpTo});
+}

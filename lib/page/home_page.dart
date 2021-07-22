@@ -1,9 +1,12 @@
 import 'package:bilibili_app/model/video_model.dart';
+import 'package:bilibili_app/navigator/route_navigator.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.onJumpToDetail}) : super(key: key);
-  final ValueChanged<VideoModel> onJumpToDetail;
+  HomePage({
+    Key? key,
+  }) : super(key: key);
+  //final ValueChanged<VideoModel> onJumpToDetail;
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -23,7 +26,13 @@ class _HomePageState extends State<HomePage> {
               minWidth: 250,
               color: Colors.blue,
               child: (Text('button')),
-              onPressed: () => widget.onJumpToDetail(VideoModel(18)))
+              onPressed: () {
+                RouteNavigator.getInstance().onJumpTo(
+                  RouteStatus.detail,
+                  args: {'videoMo': VideoModel(18)},
+                );
+              })
+          //onPressed: () => widget.onJumpToDetail(VideoModel(18)))
         ],
       )),
     );

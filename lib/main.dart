@@ -51,7 +51,18 @@ class MyRouteDelegate extends RouterDelegate<MyRoutePath>
   VideoModel? videoModel;
   RouteStatus _routeStatus = RouteStatus.login;
   // 为navigator设置一个key 必要时可以通过 navigatorKey.currentState来获取到NavigatorState对象
-  MyRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+  MyRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>() {
+    //实现路由跳转逻辑
+    RouteNavigator.getInstance().registerRouteJump(
+        RouteJumpListener(onJumpTo: (RouteStatus routeStatus, {Map? args}) {
+      _routeStatus = routeStatus;
+      if (_routeStatus == RouteStatus.detail) {
+        print(args);
+        //this.videoModel = args['videoMo'];
+      }
+      notifyListeners();
+    }));
+  }
 
   RouteStatus get routeStatus {
     if (_routeStatus != RouteStatus.register && !hasLogin) {
@@ -82,10 +93,12 @@ class MyRouteDelegate extends RouterDelegate<MyRoutePath>
     if (routeStatus == RouteStatus.home) {
       //跳转首页时将栈中其它页面进行出栈 首页不可回退
       pages.clear();
-      page = pageWrap(HomePage(onJumpToDetail: (VideoModel value) {
-        this.videoModel = value;
-        notifyListeners();
-      }));
+      page = pageWrap(HomePage(
+          //   onJumpToDetail: (VideoModel value) {
+          //   this.videoModel = value;
+          //   notifyListeners();
+          // }
+          ));
     } else if (routeStatus == RouteStatus.login) {
       page = pageWrap(LoginPage(
         onJumpToRigister: () {
