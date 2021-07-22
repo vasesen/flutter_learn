@@ -58,7 +58,7 @@ class MyRouteDelegate extends RouterDelegate<MyRoutePath>
       _routeStatus = routeStatus;
       if (_routeStatus == RouteStatus.detail) {
         print(args);
-        //this.videoModel = args['videoMo'];
+        this.videoModel = args!['videoMo'];
       }
       notifyListeners();
     }));
