@@ -119,6 +119,7 @@ class MyRouteDelegate extends RouterDelegate<MyRoutePath>
     tempPages = [...tempPages, page];
     pages = tempPages;
 
+    RouteNavigator.getInstance().notify(tempPages, pages);
     // 安卓物理返回键监听
     return WillPopScope(
       child: Navigator(
@@ -138,7 +139,11 @@ class MyRouteDelegate extends RouterDelegate<MyRoutePath>
             if (!route.didPop(result)) {
               return false;
             }
+            var temPages = [...pages];
             pages.removeLast(); // 栈顶页面进行移除
+            //通知路由变化
+            RouteNavigator.getInstance().notify(pages, temPages);
+
             return true;
           }),
       onWillPop: () async => !await navigatorKey.currentState!.maybePop(),

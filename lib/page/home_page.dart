@@ -3,15 +3,34 @@ import 'package:bilibili_app/navigator/route_navigator.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({
-    Key? key,
-  }) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
   //final ValueChanged<VideoModel> onJumpToDetail;
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  var listener;
+  @override
+  void initState() {
+    super.initState();
+    RouteNavigator.getInstance().addListtener(this.listener = (current, pre) {
+      print('current:${current.page}');
+      print('pre:${pre.page}');
+      if (widget == current.page || current.page is HomePage) {
+        print('当前页:onResume');
+      } else if (widget == pre?.page || pre.page is HomePage) {
+        print('首页：onPause 被压后台');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    RouteNavigator.getInstance().removeListener(this.listener);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

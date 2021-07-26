@@ -5,6 +5,8 @@ import 'package:bilibili_app/page/login_page.dart';
 import 'package:bilibili_app/page/register_page.dart';
 import 'package:flutter/material.dart';
 
+typedef RouteChangeListener(RouteStatusInfo current, RouteStatusInfo pre);
+
 pageWrap(Widget child) {
   return MaterialPage(key: ValueKey(child.hashCode), child: child);
 }
@@ -49,9 +51,11 @@ class RouteStatusInfo {
 // 监听路由页面跳转  监听当前页面是否压后台
 class RouteNavigator extends _RouteJumpListener {
   static RouteNavigator? _instance;
-
   RouteJumpListener? _routeJump;
+  List<RouteChangeListener> _listeners = [];
+  RouteStatusInfo? _current;
   RouteNavigator._();
+
   static RouteNavigator getInstance() {
     if (_instance == null) {
       _instance = RouteNavigator._();
@@ -62,6 +66,33 @@ class RouteNavigator extends _RouteJumpListener {
   // 注册路由跳转逻辑
   void registerRouteJump(RouteJumpListener routeJumpListener) {
     this._routeJump = routeJumpListener;
+  }
+
+  void addListtener(RouteChangeListener listener) {
+    if (!_listeners.contains(listener)) {
+      _listeners.add(listener);
+    }
+  }
+
+  void removeListener(RouteChangeListener listener) {
+    _listeners.remove(listener);
+  }
+
+  //通知路由变化
+  void notify(List<MaterialPage> currentPages, List<MaterialPage> prePages) {
+    if (currentPages == prePages) return;
+    var current =
+        RouteStatusInfo(getStatus(currentPages.last), currentPages.last.child);
+    _notify(current);
+  }
+
+  void _notify(RouteStatusInfo current) {
+    print('notify:current:${current.page}');
+    print('notify:pre:${_current?.page}');
+    _listeners.forEach((element) {
+      element(current, _current!);
+    });
+    _current = current;
   }
 
   @override
