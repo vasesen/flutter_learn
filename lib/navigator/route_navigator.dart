@@ -1,6 +1,7 @@
 // 创建页面
+import 'package:bilibili_app/navigator/bottom_navigator.dart';
 import 'package:bilibili_app/page/detail.dart';
-import 'package:bilibili_app/page/home_page.dart';
+//import 'package:bilibili_app/page/home_page.dart';
 import 'package:bilibili_app/page/login_page.dart';
 import 'package:bilibili_app/page/register_page.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ RouteStatus getStatus(MaterialPage page) {
     return RouteStatus.register;
   } else if (page.child is DetailPage) {
     return RouteStatus.detail;
-  } else if (page.child is HomePage) {
+  } else if (page.child is BottomNavigator) {
     return RouteStatus.home;
   } else {
     return RouteStatus.unknow;
@@ -54,6 +55,7 @@ class RouteNavigator extends _RouteJumpListener {
   RouteJumpListener? _routeJump;
   List<RouteChangeListener> _listeners = [];
   RouteStatusInfo? _current;
+  RouteStatusInfo? _bottomTab;
   RouteNavigator._();
 
   static RouteNavigator getInstance() {
@@ -61,6 +63,12 @@ class RouteNavigator extends _RouteJumpListener {
       _instance = RouteNavigator._();
     }
     return _instance!;
+  }
+
+  // 首页底部 tab 切换监听
+  void onBottomTabChange(int index, Widget page) {
+    _bottomTab = RouteStatusInfo(RouteStatus.home, page);
+    _notify(_bottomTab!);
   }
 
   // 注册路由跳转逻辑
@@ -87,6 +95,9 @@ class RouteNavigator extends _RouteJumpListener {
   }
 
   void _notify(RouteStatusInfo current) {
+    if (current.page is BottomNavigator) {
+      current = _bottomTab!;
+    }
     print('notify:current:${current.page}');
     print('notify:pre:${_current?.page}');
     _listeners.forEach((element) {

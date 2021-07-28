@@ -3,10 +3,12 @@ import 'package:bilibili_app/http/dao/login_dao.dart';
 import 'package:bilibili_app/model/video_model.dart';
 import 'package:bilibili_app/navigator/route_navigator.dart';
 import 'package:bilibili_app/page/detail.dart';
-import 'package:bilibili_app/page/home_page.dart';
+//import 'package:bilibili_app/page/home_page.dart';
 import 'package:bilibili_app/page/login_page.dart';
 import 'package:bilibili_app/util/toast.dart';
 import 'package:flutter/material.dart';
+
+import 'navigator/bottom_navigator.dart';
 
 void main() {
   runApp(MyApp());
@@ -93,12 +95,7 @@ class MyRouteDelegate extends RouterDelegate<MyRoutePath>
     if (routeStatus == RouteStatus.home) {
       //跳转首页时将栈中其它页面进行出栈 首页不可回退
       pages.clear();
-      page = pageWrap(HomePage(
-          //   onJumpToDetail: (VideoModel value) {
-          //   this.videoModel = value;
-          //   notifyListeners();
-          // }
-          ));
+      page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.login) {
       page = pageWrap(LoginPage(
         onJumpToRigister: () {
