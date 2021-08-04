@@ -45,7 +45,9 @@ abstract class BaseRequest {
   Map<String, dynamic> header = {
     "course-flag": 'fa',
     'auth-token': 'ZmEtMjAyMS0wNC0xMiAyMToyMjoyMC1mYQ==fa',
+    'boarding-pass': LoginDao.getBoardingPass()
   };
+
   BaseRequest addHeader(String k, Object v) {
     params[k] = v.toString();
     return this;
