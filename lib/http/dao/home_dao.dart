@@ -11,7 +11,6 @@ class HomeDao {
     request.pathParams = categoryName;
     request.add("pageIndex", pageIndex).add("pageSize", pageSize);
     var result = await Net.getInstance().fire(request);
-    var res = jsonDecode(result.toString());
-    return HomeMo.fromJson(res['data']);
+    return HomeMo.fromJson(jsonDecode(result.toString())['data']);
   }
 }
