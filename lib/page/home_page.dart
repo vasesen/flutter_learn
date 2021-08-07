@@ -1,5 +1,6 @@
 //import 'package:bilibili_app/model/video_model.dart';
-import 'package:bilibili_app/db/cache.dart';
+//import 'package:bilibili_app/db/cache.dart';
+import 'package:bilibili_app/http/core/monitor_state.dart';
 import 'package:bilibili_app/http/core/net_error.dart';
 import 'package:bilibili_app/http/dao/home_dao.dart';
 import 'package:bilibili_app/model/home_mo.dart';
@@ -17,7 +18,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomePageState extends MonitorState<HomePage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   var listener;
   late TabController _tabController;
