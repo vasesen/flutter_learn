@@ -8,11 +8,13 @@ import 'package:bilibili_app/navigator/route_navigator.dart';
 import 'package:bilibili_app/page/home_tab_page.dart';
 import 'package:bilibili_app/util/color.dart';
 import 'package:bilibili_app/util/toast.dart';
+import 'package:bilibili_app/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  final ValueChanged<int>? onJumpTo;
+  HomePage({Key? key, this.onJumpTo}) : super(key: key);
   //final ValueChanged<VideoModel> onJumpToDetail;
   @override
   _HomePageState createState() => _HomePageState();
@@ -52,37 +54,30 @@ class _HomePageState extends MonitorState<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Container(
-          child: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(top: 50),
-            child: _tabBar(),
-          ),
-          Flexible(
-              child: TabBarView(
-                  controller: _tabController,
-                  children: categoryList.map((tab) {
-                    return HomeTabPage(
-                      name: tab.name,
-                      bannerList: tab.name == '推荐' ? bannerList : null,
-                    );
-                  }).toList()))
-          // MaterialButton(
-          //     minWidth: 250,
-          //     color: Colors.blue,
-          //     child: (Text('button')),
-          //     onPressed: () {
-          //       RouteNavigator.getInstance().onJumpTo(
-          //         RouteStatus.detail,
-          //         args: {'videoMo': VideoModel(18)},
-          //       );
-          //     })
-          //onPressed: () => widget.onJumpToDetail(VideoModel(18)))
-        ],
-      )),
-    );
+        body: Column(
+      children: [
+        NavigationBar(
+          height: 50,
+          child: _appBar(),
+          color: Colors.white,
+          statusStyle: StatusStyle.DARK_CONTENT,
+        ),
+        Container(
+          color: Colors.white,
+          padding: EdgeInsets.only(top: 50),
+          child: _tabBar(),
+        ),
+        Flexible(
+            child: TabBarView(
+                controller: _tabController,
+                children: categoryList.map((tab) {
+                  return HomeTabPage(
+                    //name: tab.name,
+                    bannerList: tab.name == '推荐' ? bannerList : null,
+                  );
+                }).toList()))
+      ],
+    ));
   }
 
   @override
@@ -126,5 +121,59 @@ class _HomePageState extends MonitorState<HomePage>
     } on NetError catch (e) {
       showWarnToast(e.message);
     }
+  }
+
+  _appBar() {
+    return Padding(
+      padding: EdgeInsets.only(left: 15, right: 15),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              //print('跳转到我的页面');
+              if (widget.onJumpTo != null) {
+                widget.onJumpTo!(3);
+              }
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(23),
+              child: Image(
+                height: 46,
+                width: 46,
+                image: AssetImage('images/avatar.png'),
+              ),
+            ),
+          ),
+          Expanded(
+              child: Padding(
+            padding: EdgeInsets.only(left: 15, right: 15),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: EdgeInsets.only(left: 10),
+                height: 32,
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                decoration: BoxDecoration(color: Colors.grey[100]),
+              ),
+            ),
+          )),
+          Icon(
+            Icons.explore_outlined,
+            color: Colors.grey,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 12),
+            child: Icon(
+              Icons.mail_outline,
+              color: Colors.grey,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
